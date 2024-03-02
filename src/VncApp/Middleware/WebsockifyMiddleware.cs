@@ -41,11 +41,14 @@ public class WebsockifyMiddleware
             WebSocket webSocket =
                 await context.WebSockets.AcceptWebSocketAsync();
 
-            TcpClient tcpClient = new TcpClient();
+            var vncHost = context.Request.Query["vnc_host"][0];
+            var vncPort = context.Request.Query["vnc_port"][0];
 
-            tcpClient.Connect(_hostname, _port);
+            using TcpClient tcpClient = new TcpClient();
 
-            NetworkStream networkStream = tcpClient.GetStream();
+            tcpClient.Connect(vncHost, int.Parse(vncPort));
+
+            using NetworkStream networkStream = tcpClient.GetStream();
 
             Task receiveTask = Task.Run(async () =>
             {

@@ -169,7 +169,10 @@ const UI = {
             }
         }
 
-        /* Populate the controls if defaults are provided in the URL */
+      /* Populate the controls if defaults are provided in the URL */
+        UI.initSetting('vnc_host', window.location.hostname);
+        UI.initSetting('vnc_port', port);
+
         UI.initSetting('host', window.location.hostname);
         UI.initSetting('port', port);
         UI.initSetting('encrypt', (window.location.protocol === "https:"));
@@ -1010,6 +1013,10 @@ const UI = {
         const port = UI.getSetting('port');
         const path = UI.getSetting('path');
 
+        const vnc_host = UI.getSetting('vnc_host');
+        const vnc_port = UI.getSetting('vnc_port');
+
+
         if (typeof password === 'undefined') {
             password = WebUtil.getConfigVar('password');
             UI.reconnectPassword = password;
@@ -1040,6 +1047,7 @@ const UI = {
             url += ':' + port;
         }
         url += '/' + path;
+        url += '?' + 'vnc_host=' + vnc_host + '&vnc_port=' + vnc_port;
 
         UI.rfb = new RFB(document.getElementById('noVNC_container'), url,
                          { shared: UI.getSetting('shared'),
